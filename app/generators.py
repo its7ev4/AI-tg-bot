@@ -1,10 +1,16 @@
 """Запросы к AI"""
-import asyncio
+import httpx
 from openai import AsyncOpenAI
 
-from config import AITOKEN
+from config import AITOKEN, PROXY
 
-client = AsyncOpenAI(api_key=AITOKEN)
+
+client = AsyncOpenAI(api_key=AITOKEN,
+                    http_client=httpx.AsyncClient(
+                        proxy=PROXY,
+                        transport=httpx.HTTPTransport(
+                            local_address="0.0.0.0"))
+                    )
 
 
 async def gpt_text(req, model):
@@ -15,4 +21,3 @@ async def gpt_text(req, model):
     return completion.choices[0].message.content
 
 
-asyncio.run(gpt_text('Hello World на C++', 'gpt-4o'))
