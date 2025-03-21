@@ -18,6 +18,7 @@ async def gpt_text(req, model):
         messages=[{"role": "user", "content": req}],
         model=model
     )
-    return completion.choices[0].message.content
+    return {'response': completion.choices[0].message.content,
+            'usage': completion.usage.total_tokens}
 
 
